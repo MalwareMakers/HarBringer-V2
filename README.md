@@ -69,7 +69,7 @@ If you have found a bug in the code, use the issue tab above. If you would like 
 
 ## LICENCE: 
 
-This project has been Licenced under the GNU Affero General Public License v3.0. It can be found at [LICENCE]
+This project has been Licenced under the GNU Affero General Public License v3.0. It can be found at [LICENCE](https://github.com/MalwareMakers/HarBringer-V2/blob/main/LICENSE)
 
 ## Legality:
 
