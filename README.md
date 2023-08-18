@@ -5,7 +5,7 @@ As on now, 3 out of 40 av's detect the installer. 2 out of 40 detect the payload
 
 ## Notes: 
 
-This payload is designed for windows based systems only. Windows 10 and 11. Usage of this software is against the Discord ToS, using it may get you banned. Also for reasons im yet to understand Avast and AVG keep managaing to detect payload. 
+*This payload is designed for windows based systems only. Windows 10 and 11. Usage of this software is against the Discord ToS, using it may get you banned. Also for reasons im yet to understand Avast and AVG keep managaing to detect payload.*
 
 ## Functionality: 
 
@@ -61,7 +61,7 @@ Once a victim has the paylaod installed on their system, you have these commands
 * `/tree` - Maps system Directories of a given path, ie `/tree "C:\"`
 
 ## Helping out: 
-*If you found this repo useful, give this repo a STAR. This will help grow this repo and given enough stars, upgrades!
+If you found this repo useful, give this repo a STAR. This will help grow this repo and given enough stars, upgrades!
 
 ## Find a Bug? 
 
