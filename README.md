@@ -46,7 +46,7 @@ There are a Few things which must be done before the actual payloads can be made
 
 ## Usage:
 
-Once a victim has the paylaod installed on their system, you have these commands to use: 
+Once a victim has the payload installed on their system, you have these commands to use: 
 * `/mass-upload` - starts uploading every viable file on a victims computer to the server. 
 * `/screen-update` - sends screenshot of victims screen to the server
 * `/quick-info` - gathers info based on ip-api
