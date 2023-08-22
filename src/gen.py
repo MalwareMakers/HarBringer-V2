@@ -658,12 +658,14 @@ class Parser:
                 password_end = self.command_line.find(' ', password_start)
                 password = self.command_line[password_start:password_end]
 
-                file_location_start += 1
-                file_location_end = self.command_line.find('"', file_location_start)
-            else:
-                file_location_end = self.command_line.find(' ', file_location_start)
+                file_location_start = index_f + 3
+                if self.command_line[file_location_start] == '"':
+                    file_location_start += 1
+                    file_location_end = self.command_line.find('"', file_location_start)
+                else:
+                    file_location_end = self.command_line.find(' ', file_location_start)
 
-            file_location = self.command_line[file_location_start:file_location_end]
+                file_location = self.command_line[file_location_start:file_location_end]
 
             if self.func.lower() == "encrypt":
                 try:
@@ -679,6 +681,9 @@ class Parser:
                 except Exception as e: 
                     msg_instance = System_Messages(webhook_url=self.webhook_url,error=True,headers=None,payload=None,message=str(e),is_msg=False)
                     msg_instance.msg()
+            
+        else: 
+            return None
 
 class Encrypter: 
     def __init__(self,password,file_location,webhook_url):
