@@ -4,3 +4,4 @@ pynput
 requests
 pyinstaller
 rich
+pystyle
