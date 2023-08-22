@@ -60,6 +60,10 @@ Once a victim has the payload installed on their system, you have these commands
 * `decrypt` - Decrypts a set path you has set during encryption using a password you had set during encryption, ie `/decrypt -p 1234 -f "C:\Users\James\Desktop"`
 * `/tree` - Maps system Directories of a given path, ie `/tree "C:\"`
 
+## The Installer: 
+
+I realised most people will be either afraid to use the installer as they think they will infect themselves or something along those lines. Let me explain what it is. The installer is a small file which can be used to install the final payload. This also means you can't infect yourself unless you run it, just like how running the software on yourself will infect your machine. I made it as the final payload is over 25mb, the max size for a lot of services, and sending it it would be difficult. As a way to get round this you can send the installer which wil just install the software once it has been run without a) contain the final package and b) being to big that you can't send it.  
+
 ## Helping out: 
 If you found this repo useful, give this repo a STAR. This will help grow this repo and given enough stars, upgrades!
 
