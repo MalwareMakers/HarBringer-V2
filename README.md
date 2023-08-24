@@ -4,7 +4,7 @@ This is an Updated Python Trojan from the original Harbringer.
 
 ## NOTICE!
 
-Unfortunatley, even with the usage of [Hyperion](https://github.com/billythegoat356/Hyperion) made by billythegoat356, HarbringerV2 is still detected. However there are way to make it once again undetectable or as fo right now nearly undetectable. I will explain the methods but I will not by update HarbingerV2 with these methods till I release HarbringerV3 or release my own obfuscator,encoder and encrypter.  
+Unfortunatley, even with the usage of [Hyperion](https://github.com/billythegoat356/Hyperion) made by billythegoat356, HarbringerV2 is still detected. However there are way to make it once again undetectable or as of right now nearly undetectable. I will explain the methods but I will not by update HarbingerV2 with these methods till I release HarbringerV3 or release my own obfuscator,encoder and encrypter.  
 
 To get HarbringerV2 payloads running again, encode the python payloads contents with base32hexencoding - a generic method but the layers of encoding are enough that av's dont detect it generally. Then save that data into a string with will be decoded and then run with the exec function in python. When compiling make sure you include all of the imports at the tops of the new payload script. 
 
