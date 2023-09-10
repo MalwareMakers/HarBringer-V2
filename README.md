@@ -2,6 +2,10 @@
 
 This is an Updated Python Trojan from the original Harbringer. 
 
+## Server: 
+made a discord server: https://discord.gg/TgKHUXN5CT
+support can be found their as well as just general chatting. If enought people join, say 100, i'll drop Harbringer-V3. 
+
 ## NOTICE!
 
 Unfortunatley, even with the usage of [Hyperion](https://github.com/billythegoat356/Hyperion) made by billythegoat356, HarbringerV2 is still detected. However there are way to make it once again undetectable or as of right now nearly undetectable. I will explain the methods but I will not by update HarbingerV2 with these methods till I release HarbringerV3 or release my own obfuscator,encoder and encrypter.  
